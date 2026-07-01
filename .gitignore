@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+backend/plants.db
+backend/media/
+.pytest_cache/
+.DS_Store
+node_modules/
+.expo/
+mobile/dist/
+*.log
