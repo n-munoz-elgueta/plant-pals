@@ -8,7 +8,7 @@ from app.auth import get_current_membership
 from app.database import get_db
 from app.models import HouseholdMember, Plant
 from app.schemas import SchedulePlant, ScheduleResponse
-from app.serializers import latest_watering, photo_url, utc_today
+from app.serializers import latest_watering, utc_today
 
 router = APIRouter(prefix="/schedule", tags=["schedule"])
 
@@ -45,7 +45,6 @@ def get_schedule(
             SchedulePlant(
                 plant_id=plant.id,
                 name=plant.name,
-                photo_url=photo_url(plant),
                 status=scheduling.watering_status(next_due, today),
                 next_due=next_due,
                 due_dates=scheduling.due_dates_in_range(

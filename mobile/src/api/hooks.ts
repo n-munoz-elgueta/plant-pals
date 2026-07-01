@@ -125,15 +125,6 @@ export function useDeletePlant() {
   });
 }
 
-export function useUploadPlantPhoto(id: number) {
-  const invalidate = useInvalidatePlantData();
-  return useMutation({
-    mutationFn: (uri: string) =>
-      api.uploadPhoto<Plant>(`/plants/${id}/photo`, uri),
-    onSuccess: invalidate,
-  });
-}
-
 export function useWaterPlant() {
   const invalidate = useInvalidatePlantData();
   return useMutation({

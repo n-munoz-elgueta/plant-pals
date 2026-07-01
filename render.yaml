@@ -1,0 +1,18 @@
+# Render Blueprint for the Plant Pals backend.
+# In Render: New -> Blueprint, point it at this repo. It builds the Docker
+# image in backend/ and runs it on the free plan. You'll be prompted for
+# PLANTS_DATABASE_URL (paste your Neon Postgres connection string);
+# PLANTS_SECRET_KEY is generated automatically.
+services:
+  - type: web
+    name: plant-pals-api
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: PLANTS_SECRET_KEY
+        generateValue: true
+      - key: PLANTS_DATABASE_URL
+        sync: false

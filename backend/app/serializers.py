@@ -15,10 +15,6 @@ def latest_watering(plant: Plant) -> WateringEvent | None:
     return max(plant.waterings, key=lambda w: w.watered_at)
 
 
-def photo_url(plant: Plant) -> str | None:
-    return f"/media/{plant.photo_filename}" if plant.photo_filename else None
-
-
 def plant_to_out(plant: Plant, today: date | None = None) -> PlantOut:
     today = today or utc_today()
     last = latest_watering(plant)
@@ -28,7 +24,6 @@ def plant_to_out(plant: Plant, today: date | None = None) -> PlantOut:
         id=plant.id,
         name=plant.name,
         species=SpeciesOut.model_validate(plant.species) if plant.species else None,
-        photo_url=photo_url(plant),
         water_interval_days=plant.water_interval_days,
         notes=plant.notes,
         created_at=plant.created_at,

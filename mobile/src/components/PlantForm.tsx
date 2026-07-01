@@ -1,19 +1,7 @@
-import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
-import {
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 
 import { Plant, Species } from "../api/types";
-import { mediaUrl } from "../api/client";
-import { colors } from "../theme";
 import { SpeciesPicker } from "./SpeciesPicker";
 import { Button, ErrorText, TextField } from "./ui";
 
@@ -30,16 +18,12 @@ export function PlantForm({
   onSubmit,
   submitting,
   error,
-  photoUri,
-  onPickPhoto,
 }: {
   initial?: Plant;
   submitLabel: string;
   onSubmit: (values: PlantFormValues) => void;
   submitting: boolean;
   error: unknown;
-  photoUri: string | null;
-  onPickPhoto: (uri: string) => void;
 }) {
   const [name, setName] = useState(initial?.name ?? "");
   const [species, setSpecies] = useState<Species | null>(initial?.species ?? null);
@@ -48,21 +32,6 @@ export function PlantForm({
   );
   const [notes, setNotes] = useState(initial?.notes ?? "");
   const [validationError, setValidationError] = useState<string | null>(null);
-
-  const existingPhoto = mediaUrl(initial?.photo_url ?? null);
-  const shownPhoto = photoUri ?? existingPhoto;
-
-  const pickPhoto = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: "images",
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 0.7,
-    });
-    if (!result.canceled && result.assets[0]) {
-      onPickPhoto(result.assets[0].uri);
-    }
-  };
 
   const selectSpecies = (next: Species | null) => {
     setSpecies(next);
@@ -94,17 +63,6 @@ export function PlantForm({
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <ScrollView keyboardShouldPersistTaps="handled">
-        <Pressable style={styles.photoPicker} onPress={pickPhoto}>
-          {shownPhoto ? (
-            <Image source={{ uri: shownPhoto }} style={styles.photo} />
-          ) : (
-            <View style={[styles.photo, styles.photoPlaceholder]}>
-              <Text style={styles.photoEmoji}>📷</Text>
-              <Text style={styles.photoHint}>Add a photo</Text>
-            </View>
-          )}
-        </Pressable>
-
         <TextField
           label="Name"
           placeholder="e.g. Monty the Monstera"
@@ -132,30 +90,3 @@ export function PlantForm({
     </KeyboardAvoidingView>
   );
 }
-
-const styles = StyleSheet.create({
-  photoPicker: {
-    alignSelf: "center",
-    marginVertical: 8,
-  },
-  photo: {
-    width: 128,
-    height: 128,
-    borderRadius: 16,
-  },
-  photoPlaceholder: {
-    backgroundColor: colors.card,
-    borderWidth: 1,
-    borderColor: colors.border,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  photoEmoji: {
-    fontSize: 32,
-  },
-  photoHint: {
-    fontSize: 12,
-    color: colors.muted,
-    marginTop: 4,
-  },
-});

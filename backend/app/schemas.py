@@ -79,7 +79,6 @@ class PlantOut(ORMModel):
     id: int
     name: str
     species: SpeciesOut | None
-    photo_url: str | None
     water_interval_days: int
     notes: str
     created_at: datetime
@@ -109,7 +108,6 @@ class WateringOut(ORMModel):
 class SchedulePlant(BaseModel):
     plant_id: int
     name: str
-    photo_url: str | None
     status: str
     next_due: date
     due_dates: list[date]

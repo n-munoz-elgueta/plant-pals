@@ -63,7 +63,6 @@ class Plant(Base):
     household_id: Mapped[int] = mapped_column(ForeignKey("households.id"), index=True)
     name: Mapped[str] = mapped_column(String(100))
     species_id: Mapped[int | None] = mapped_column(ForeignKey("species.id"))
-    photo_filename: Mapped[str | None] = mapped_column(String(255))
     water_interval_days: Mapped[int]
     notes: Mapped[str] = mapped_column(Text, default="")
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)

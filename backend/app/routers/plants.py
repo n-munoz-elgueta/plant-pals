@@ -1,10 +1,6 @@
-import secrets
-from pathlib import Path
-
-from fastapi import APIRouter, Depends, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app import config
 from app.auth import get_current_membership
 from app.database import get_db
 from app.models import HouseholdMember, Plant, Species
@@ -12,14 +8,6 @@ from app.schemas import PlantCreate, PlantOut, PlantUpdate
 from app.serializers import plant_to_out, utc_today
 
 router = APIRouter(prefix="/plants", tags=["plants"])
-
-ALLOWED_PHOTO_TYPES = {
-    "image/jpeg": ".jpg",
-    "image/png": ".png",
-    "image/webp": ".webp",
-    "image/heic": ".heic",
-}
-MAX_PHOTO_BYTES = 10 * 1024 * 1024
 
 
 def get_household_plant(
@@ -99,32 +87,5 @@ def delete_plant(
     plant: Plant = Depends(get_household_plant),
     db: Session = Depends(get_db),
 ):
-    if plant.photo_filename:
-        (config.MEDIA_DIR / plant.photo_filename).unlink(missing_ok=True)
     db.delete(plant)
     db.commit()
-
-
-@router.post("/{plant_id}/photo", response_model=PlantOut)
-async def upload_photo(
-    file: UploadFile,
-    plant: Plant = Depends(get_household_plant),
-    db: Session = Depends(get_db),
-):
-    ext = ALLOWED_PHOTO_TYPES.get(file.content_type or "")
-    if ext is None:
-        raise HTTPException(400, "Photo must be a JPEG, PNG, WebP, or HEIC image")
-    data = await file.read()
-    if len(data) > MAX_PHOTO_BYTES:
-        raise HTTPException(400, "Photo must be smaller than 10 MB")
-
-    config.MEDIA_DIR.mkdir(parents=True, exist_ok=True)
-    filename = f"plant_{plant.id}_{secrets.token_hex(8)}{ext}"
-    (config.MEDIA_DIR / filename).write_bytes(data)
-
-    if plant.photo_filename:
-        (config.MEDIA_DIR / plant.photo_filename).unlink(missing_ok=True)
-    plant.photo_filename = filename
-    db.commit()
-    db.refresh(plant)
-    return plant_to_out(plant)

@@ -24,13 +24,7 @@ def db_session():
 
 
 @pytest.fixture()
-def client(db_session, tmp_path, monkeypatch):
-    from app import config
-
-    media_dir = tmp_path / "media"
-    media_dir.mkdir()
-    monkeypatch.setattr(config, "MEDIA_DIR", media_dir)
-
+def client(db_session):
     app.dependency_overrides[get_db] = lambda: db_session
     with TestClient(app) as test_client:
         yield test_client

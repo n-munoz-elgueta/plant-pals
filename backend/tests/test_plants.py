@@ -1,6 +1,3 @@
-import io
-
-
 def create_plant(client, headers, name="Monty", interval=7, **extra):
     res = client.post(
         "/plants",
@@ -57,23 +54,3 @@ def test_plants_scoped_to_household(client, make_user, household_user):
     assert (
         client.delete(f"/plants/{plant['id']}", headers=outsider).status_code == 404
     )
-
-
-def test_photo_upload(client, household_user):
-    plant = create_plant(client, household_user)
-    png = b"\x89PNG\r\n\x1a\n" + b"0" * 100
-    res = client.post(
-        f"/plants/{plant['id']}/photo",
-        files={"file": ("leaf.png", io.BytesIO(png), "image/png")},
-        headers=household_user,
-    )
-    assert res.status_code == 200, res.text
-    url = res.json()["photo_url"]
-    assert url.startswith("/media/plant_")
-
-    bad = client.post(
-        f"/plants/{plant['id']}/photo",
-        files={"file": ("nope.txt", io.BytesIO(b"hi"), "text/plain")},
-        headers=household_user,
-    )
-    assert bad.status_code == 400

@@ -59,18 +59,3 @@ export function patch<T>(path: string, body: unknown): Promise<T> {
 export function del(path: string): Promise<void> {
   return request<void>(path, { method: "DELETE" });
 }
-
-export function uploadPhoto<T>(path: string, uri: string): Promise<T> {
-  const name = uri.split("/").pop() ?? "photo.jpg";
-  const ext = name.split(".").pop()?.toLowerCase();
-  const type =
-    ext === "png" ? "image/png" : ext === "heic" ? "image/heic" : "image/jpeg";
-  const form = new FormData();
-  // React Native's FormData accepts {uri, name, type} file descriptors
-  form.append("file", { uri, name, type } as unknown as Blob);
-  return request<T>(path, { method: "POST", body: form });
-}
-
-export function mediaUrl(path: string | null): string | null {
-  return path ? `${API_URL}${path}` : null;
-}

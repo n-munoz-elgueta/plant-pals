@@ -1,16 +1,7 @@
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import React from "react";
-import {
-  Alert,
-  FlatList,
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Alert, FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
-import { mediaUrl } from "../../../src/api/client";
 import {
   useDeletePlant,
   usePlant,
@@ -65,8 +56,6 @@ export default function PlantDetail() {
     );
   }
 
-  const photo = mediaUrl(plant.photo_url);
-
   return (
     <Screen style={{ padding: 0 }}>
       <Stack.Screen
@@ -85,7 +74,6 @@ export default function PlantDetail() {
         keyExtractor={(w) => String(w.id)}
         ListHeaderComponent={
           <View>
-            {photo ? <Image source={{ uri: photo }} style={styles.photo} /> : null}
             <View style={styles.headerRow}>
               <View style={{ flex: 1 }}>
                 <Text style={styles.name}>{plant.name}</Text>
@@ -142,12 +130,6 @@ const styles = StyleSheet.create({
   list: {
     padding: 16,
     paddingBottom: 48,
-  },
-  photo: {
-    width: "100%",
-    height: 220,
-    borderRadius: 16,
-    marginBottom: 12,
   },
   headerRow: {
     flexDirection: "row",

@@ -1,7 +1,6 @@
 import React from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { mediaUrl } from "../api/client";
 import { Plant } from "../api/types";
 import { colors } from "../theme";
 import { StatusBadge } from "./StatusBadge";
@@ -19,19 +18,14 @@ export function PlantCard({
   plant: Plant;
   onPress: () => void;
 }) {
-  const photo = mediaUrl(plant.photo_url);
   return (
     <Pressable
       onPress={onPress}
       style={({ pressed }) => [styles.card, pressed && { opacity: 0.8 }]}
     >
-      {photo ? (
-        <Image source={{ uri: photo }} style={styles.photo} />
-      ) : (
-        <View style={[styles.photo, styles.photoPlaceholder]}>
-          <Text style={styles.photoEmoji}>🪴</Text>
-        </View>
-      )}
+      <View style={[styles.photo, styles.photoPlaceholder]}>
+        <Text style={styles.photoEmoji}>🪴</Text>
+      </View>
       <View style={styles.info}>
         <Text style={styles.name}>{plant.name}</Text>
         {plant.species ? (

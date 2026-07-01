@@ -31,7 +31,6 @@ export interface Plant {
   id: number;
   name: string;
   species: Species | null;
-  photo_url: string | null;
   water_interval_days: number;
   notes: string;
   created_at: string;
@@ -52,7 +51,6 @@ export interface Watering {
 export interface SchedulePlant {
   plant_id: number;
   name: string;
-  photo_url: string | null;
   status: PlantStatus;
   next_due: string;
   due_dates: string[];

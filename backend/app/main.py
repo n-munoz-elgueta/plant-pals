@@ -2,9 +2,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 
-from app import config
 from app.database import Base, SessionLocal, engine
 from app.routers import auth, households, plants, schedule, species, waterings
 from app.seed import seed_species
@@ -19,9 +17,6 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Plant Co-Parenting API", lifespan=lifespan)
-
-config.MEDIA_DIR.mkdir(parents=True, exist_ok=True)
-app.mount("/media", StaticFiles(directory=config.MEDIA_DIR), name="media")
 
 app.add_middleware(
     CORSMiddleware,
