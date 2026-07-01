@@ -40,12 +40,30 @@ npx expo start
 Scan the QR code with the Expo Go app on each phone (both phones must be on
 the same Wi-Fi as your computer). The app automatically points its API
 calls at the machine running the Expo dev server on port 8000, so start the
-backend on the same machine.
+backend on the same machine **first** — if the backend isn't running you'll
+see "Network request failed" when you try to sign up.
 
 To point at a deployed backend instead, set:
 
 ```bash
 EXPO_PUBLIC_API_URL=https://your-server.example.com npx expo start
+```
+
+### Node and Expo SDK versions
+
+This project targets **Expo SDK 54**, which is the version the Expo Go app
+in the App Store / Play Store currently supports. If Expo Go reports
+"Project is incompatible with this version of Expo Go," check that the
+`expo` version in `mobile/package.json` matches whatever SDK your installed
+Expo Go supports (the Expo Go app shows its supported SDK on its home
+screen), and run `npx expo install --fix` after changing it.
+
+Use **Node 22 LTS** for the mobile tooling. Node 26 currently crashes the
+Expo CLI on this SDK (a silent failure during config resolution). If you
+installed Node 22 alongside another version via Homebrew, prefix commands:
+
+```bash
+PATH="/opt/homebrew/opt/node@22/bin:$PATH" npx expo start -c
 ```
 
 ## How you use it
